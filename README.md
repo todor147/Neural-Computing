@@ -1,117 +1,245 @@
-# CS4287 Neural Computing - Assignment 2: CNN Fruit Detection
+# CS4287 Neural Computing - Assignment 1: CNN Fruit Classification
 
-## Project Overview
-Convolutional Neural Network implementation for fruit classification using the Kaggle Fruit Detection dataset.
+## 🎓 Team Information
+- **Course:** CS4287 Neural Computing - Semester 1, AY 25/26
+- **Assignment:** Convolutional Neural Networks (CNNs)
+- **Due Date:** Saturday, November 1st, 2025 at 23:59
+- **Weight:** 20% of total module marks
 
-## Team Members
-- **Student 1:** [Name] - [Student ID]
-- **Student 2:** [Name] - [Student ID]
+**Team Members:**
+- Student 1: [Name] - [ID]
+- Student 2: [Name] - [ID]
 
-## Dataset
-- **Source:** https://www.kaggle.com/datasets/lakshaytyagi01/fruit-detection/data
-- **Classes:** 6 (Apple, Banana, Grape, Orange, Pineapple, Watermelon)
-- **Total Images:** 8,479
-  - Training: 7,108 images
-  - Testing: 457 images
-  - Validation: 914 images
-- **Preprocessing:** Converted from YOLO format to classification format, resized to 224×224
+---
 
-## Files
+## 📋 Project Overview
 
-### For Submission:
-1. **CS4287-Assign2-[ID1]-[ID2].ipynb** - Jupyter notebook with complete implementation
-2. **Assignment_Report.pdf** - Detailed report covering all required sections
+This project implements a **Convolutional Neural Network (CNN)** for fruit classification using the Kaggle Fruit Detection dataset. The model classifies images into 6 fruit categories:
+- 🍎 Apple
+- 🍌 Banana
+- 🍇 Grape
+- 🍊 Orange
+- 🍍 Pineapple
+- 🍉 Watermelon
 
-### Supporting Files:
-- **fruit_detection_complete.py** - Complete Python implementation
-- **requirements.txt** - Required Python packages
-- **data/fruits_classification/** - Organized dataset
+---
 
-## Setup Instructions
+## 🚀 Getting Started with Google Colab
 
-### 1. Install Dependencies
-```bash
-pip install -r requirements.txt
+**We recommend using Google Colab for FREE GPU access!**
+
+### Quick Steps:
+1. Read **`GOOGLE_COLAB_INSTRUCTIONS.md`** for detailed setup
+2. Upload dataset to Google Drive
+3. Open notebook in Google Colab
+4. Enable GPU (Runtime → Change runtime type → GPU)
+5. Mount Google Drive and update data paths
+6. Run all cells!
+
+See **`GOOGLE_COLAB_INSTRUCTIONS.md`** for complete step-by-step instructions.
+
+---
+
+## 📁 Project Structure
+
+```
+Neural Computing/
+├── CS4287-Assign2-[ID1]-[ID2].ipynb    # Main Jupyter notebook
+├── data/
+│   └── fruits_classification/           # Dataset (upload to Google Drive)
+│       ├── train/                       # Training images
+│       ├── test/                        # Test images
+│       └── valid/                       # Validation images
+├── GOOGLE_COLAB_INSTRUCTIONS.md         # 👈 START HERE
+├── PDF_REPORT_TEMPLATE.md               # Template for your report
+├── SUBMISSION_CHECKLIST.md              # Pre-submission checklist
+└── README.md                            # This file
 ```
 
-### 2. Run the Code
+---
 
-**Option A: Python Script**
-```bash
-python fruit_detection_complete.py
-```
+## 🎯 Assignment Requirements
 
-**Option B: Jupyter Notebook**
-```bash
-jupyter notebook CS4287-Assign2-PLACEHOLDER-PLACEHOLDER.ipynb
-```
+### Deliverables:
+1. **PDF Report** including:
+   - Dataset analysis and visualization
+   - Network architecture diagram
+   - Hyperparameters and justification
+   - Loss function and optimizer discussion
+   - Cross-fold validation
+   - Results with plots (accuracy, precision, recall)
+   - Hyperparameter experiments
+   - Statement of work
+   - Generative AI usage log
+   - References
 
-## Model Architecture
-- 4 Convolutional blocks (32 → 64 → 128 → 256 filters)
-- Batch Normalization after each convolution
-- MaxPooling for dimensionality reduction
-- Dropout for regularization (0.25 in conv layers, 0.5 in FC layers)
-- 2 Fully connected layers (512 → 256 neurons)
-- Softmax output (6 classes)
+2. **Jupyter Notebook** with:
+   - Filename: `CS4287-Assign2-[ID1]-[ID2].ipynb`
+   - Team member names and IDs in first cell
+   - Execution status comment
+   - Third-party source links
+   - **Every critical line commented** to show understanding
 
-## Training Configuration
+---
+
+## 🏆 Grading - Level of Difficulty
+
+Your project aims for **Level 2-3**:
+- Using a custom CNN architecture (similar complexity to VGG/ResNet blocks)
+- 6-class fruit classification
+- Batch normalization, dropout, He initialization
+- Data augmentation
+- Cross-fold validation
+- Hyperparameter tuning
+
+**Target Grade:** Accomplished (11-15) to Exemplary (16-20)
+
+---
+
+## 📊 Dataset
+
+**Source:** Kaggle - [Fruit Detection Dataset](https://www.kaggle.com/datasets/lakshaytyagi01/fruit-detection)
+
+**Statistics:**
+- 6 fruit classes
+- ~3000+ training images
+- ~600+ validation images
+- ~600+ test images
+- Image size: 224x224 RGB
+
+**Download and Setup:**
+1. Download from Kaggle (requires free account)
+2. Extract ZIP file
+3. Upload `data/fruits_classification/` to Google Drive at: `/MyDrive/CS4287_Assignment/data/`
+
+---
+
+## 🧠 Model Architecture
+
+**Custom CNN** inspired by VGG and modern best practices:
+- **4 Convolutional Blocks** (32 → 64 → 128 → 256 filters)
+- **Batch Normalization** after each conv layer
+- **Max Pooling** for dimensionality reduction
+- **Dropout** for regularization (0.25 in conv, 0.5 in FC)
+- **He Initialization** for weights
+- **ReLU** activation functions
+- **Softmax** output for 6-class classification
+
+**Total Parameters:** ~3-5 million (trainable)
+
+---
+
+## 🔧 Hyperparameters
+
 - **Optimizer:** Adam (learning rate: 0.001)
-- **Loss:** Categorical Cross-Entropy
+- **Loss Function:** Categorical Cross-Entropy
 - **Batch Size:** 32
-- **Image Size:** 224×224×3
-- **Callbacks:** ReduceLROnPlateau, EarlyStopping, ModelCheckpoint
+- **Image Size:** 224x224
+- **Epochs:** 50 (with early stopping)
+- **Validation Split:** Pre-split (train/valid/test)
 
-## Assignment Requirements Checklist
+**Experiments:** Vary learning rate, batch size, dropout rate, and data augmentation parameters.
 
-- [x] Dataset loaded and visualized
-- [x] Data preprocessing and normalization
-- [x] CNN architecture implemented
-- [x] Cross-fold validation
-- [x] Hyperparameter analysis
-- [x] Results visualization (accuracy, loss plots)
-- [x] Confusion matrix and classification report
-- [x] Extensive code comments
-- [ ] PDF report written
-- [ ] Notebook renamed with student IDs
-- [ ] Team member contributions documented
+---
+
+## 📈 Expected Results
+
+With GPU training on Colab:
+- **Training Time:** ~30-90 minutes
+- **Expected Accuracy:** 85-95% (validation)
+- **Training plots:** Loss and accuracy curves
+- **Evaluation metrics:** Confusion matrix, precision, recall, F1-score
+
+---
+
+## ✅ Submission Checklist
+
+Before submitting, check **`SUBMISSION_CHECKLIST.md`**:
+- [ ] Student IDs in filename
+- [ ] Names and IDs in notebook header
+- [ ] Code executes without errors
+- [ ] All code commented
+- [ ] PDF report follows specification
 - [ ] Generative AI usage documented
+- [ ] References included
+- [ ] Statement of work included
 
-## Report Sections (As Per Assignment Spec)
-1. Title Page
-2. Table of Contents
-3. The Dataset (visualizations, preprocessing)
-4. Network Structure and Hyperparameters
-5. Cost/Loss Function
-6. Optimizer
-7. Cross-Fold Validation
-8. Results (plots, metrics)
-9. Evaluation
-10. Hyperparameter Impact Analysis
-11. Statement of Work
-12. Use of Generative AI
-13. Level of Difficulty
-14. References
+---
 
-## Level of Difficulty
-This project targets **2-3 marks** for difficulty:
-- Custom CNN architecture (4 convolutional blocks)
-- Comprehensive data augmentation
-- Cross-fold validation implementation
-- Hyperparameter analysis
-- Multi-class classification (6 classes)
+## 📚 Key References
 
-## Third-Party Sources
-- Dataset: https://www.kaggle.com/datasets/lakshaytyagi01/fruit-detection/data
-- TensorFlow/Keras: https://www.tensorflow.org/
-- [Add any other sources you referenced]
+1. **He et al. (2015)** - He Initialization: "Delving Deep into Rectifiers"
+2. **Ioffe & Szegedy (2015)** - Batch Normalization
+3. **Srivastava et al. (2014)** - Dropout
+4. **Goodfellow et al. (2016)** - Deep Learning book
+5. **TensorFlow/Keras Documentation**
 
-## Notes
-- Code executes to completion without errors
-- All critical lines are extensively commented
-- Dataset is non-linear with rich features
-- Results include precision, recall, and F1-score
+---
 
-## Submission
-- **Deadline:** 23:59 Saturday, 1st November (Week 8)
-- **Method:** Sulis Assignment Tool
-- **Files:** Jupyter Notebook + PDF Report
+## 🤝 Team Collaboration
+
+**Divide work effectively:**
+- Member 1: Data preprocessing, visualization, model implementation
+- Member 2: Training, evaluation, hyperparameter experiments, report writing
+- Both: Review, testing, final submission
+
+Document individual contributions in "Statement of Work" section of report.
+
+---
+
+## ⚠️ Important Notes
+
+1. **Plagiarism:** Cite all sources. Clearly mark reused code vs. your work.
+2. **Generative AI:** Log ALL prompts used. Don't use for grammar/style in report.
+3. **Interview:** Be prepared to walk through your code in Weeks 13-15.
+4. **Code Must Run:** Second line of notebook must state: "Code executes to completion without errors"
+
+---
+
+## 🆘 Need Help?
+
+1. **Read:** `GOOGLE_COLAB_INSTRUCTIONS.md` for setup issues
+2. **Check:** `SUBMISSION_CHECKLIST.md` before submitting
+3. **Review:** Assignment specification PDF
+4. **Contact:** Lecturer with subject "CS4287 Team" for team issues
+
+---
+
+## 📝 Report Template
+
+Use **`PDF_REPORT_TEMPLATE.md`** as a starting point for your PDF report. It includes all required sections with guidance on what to include.
+
+---
+
+## 🎓 Academic Integrity
+
+- Understand every line of code you submit
+- Cite all sources properly (see "Cite it Right" - UL Library)
+- Document Generative AI use transparently
+- Add value beyond sourced material
+- Be prepared for code walkthrough interview
+
+**Failure to comply = F grade**
+
+---
+
+## 🏁 Final Steps
+
+1. ✅ Complete training on Google Colab
+2. ✅ Export all results (plots, metrics, model)
+3. ✅ Write PDF report using template
+4. ✅ Review checklist
+5. ✅ Submit via Sulis:
+   - PDF report
+   - Jupyter notebook (.ipynb file)
+
+**Submission Deadline: Saturday, November 1st, 2025 @ 23:59**
+
+---
+
+Good luck with your assignment! 🚀🍎🍌🍇
+
+---
+
+## License
+This is an academic project for CS4287 at University of Limerick.
