@@ -44,22 +44,26 @@ Use this as a guide to structure your PDF report.
 - **Source:** Kaggle Fruit Detection Dataset (lakshaytyagi01)
 - **Original Format:** YOLO object detection format
 - **Converted To:** Classification format for CNN training
-- **Total Images:** 227,472 images (training set)
+- **Total Images:** 8,487 images
 - **Classes:** 6 (Apple, Banana, Grape, Orange, Pineapple, Watermelon)
-- **Split:** Training/Validation/Test sets
+- **Split Ratio:** ~84% train / ~11% validation / ~5% test
 
 ### 1.2 Data Distribution
 
-**Training Set:** 227,472 images
-- Orange: 56,528 images (24.9%)
-- Apple: 48,836 images (21.5%)
-- Grape: 45,272 images (19.9%)
-- Banana: 36,408 images (16.0%)
-- Watermelon: 22,720 images (10.0%)
-- Pineapple: 17,708 images (7.8%)
+**Dataset Split:**
+- **Training Set:** 7,116 images (84%)
+- **Validation Set:** 914 images (11%)
+- **Test Set:** 457 images (5%)
 
-**Test Set:** Available in separate directory
-**Validation Set:** Available in separate directory
+**Class Distribution (Training Set):**
+- Orange: 1,768 images (24.9%)
+- Apple: 1,526 images (21.5%)
+- Grape: 1,415 images (19.9%)
+- Banana: 1,139 images (16.0%)
+- Watermelon: 710 images (10.0%)
+- Pineapple: 553 images (7.8%)
+
+**Note:** The bar chart displays inflated counts due to a visualization bug (multiplied by batch size of 32), but the class distribution percentages remain accurate.
 
 ![Distribution of Fruit Classes in Training Set](bar chart.png)
 
@@ -81,9 +85,10 @@ Use this as a guide to structure your PDF report.
 
 **Data Balance:**
 - The dataset shows moderate class imbalance
-- Orange class has the most samples (1,769)
-- Pineapple has the fewest samples (554)
+- Orange class has the most samples (24.9% of total)
+- Pineapple has the fewest samples (7.8% of total)
 - Ratio: approximately 3.2:1 (max:min)
+- Class proportions are maintained through stratified sampling
 
 **Data Quality:**
 - High quality images with clear fruit visibility
