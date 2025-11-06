@@ -14,71 +14,10 @@ Use this as a guide to structure your PDF report.
 ## Assignment 2: Transfer Learning with ResNet50 for Fruit Classification
 
 **Team Members:**
-- [Name 1] - [Student ID 1]
-- [Name 2] - [Student ID 2]
+- Todor Aleksandrov - 22336303
+- Darragh Kennedy - 22346945
 
-**Date:** [Submission Date]
-
----
-
-## ⚠️ CURRENT STATUS & NEXT STEPS
-
-### ✅ COMPLETED:
-1. ✅ **Dataset prepared:** Fruit detection dataset with 6 classes (227K images)
-2. ✅ **Baseline model trained:** ResNet50 transfer learning
-3. ✅ **Hyperparameter Experiment:** Dropout rate variation (Section 8.2)
-   - **Best config found:** Dropout (0.2, 0.3, 0.4)
-   - **Result:** 78.23% validation accuracy, -0.56% gap (optimal!)
-4. ✅ **Test Set Evaluation:** (Section 6.2-6.4)
-   - Confusion matrix generated (Figure 5)
-   - Per-class metrics documented
-   - Sample predictions visualized (Figure 6)
-   - Misclassification patterns analyzed
-5. ✅ **All Figures:** Training curves, sample images, class distribution, dropout comparison, confusion matrix, test predictions
-
-### 🔴 TODO - CRITICAL FOR SUBMISSION:
-
-**HIGH PRIORITY (Required for full marks):**
-
-1. **Section 9: Statement of Work** ⚠️ IMPORTANT
-   - Write one paragraph per team member
-   - Document specific contributions
-   - **Time:** 20 minutes
-   - **Priority:** HIGH
-
-2. **Section 10: Generative AI Log** ⚠️ IMPORTANT
-   - List all AI prompts used (e.g., Cursor, ChatGPT, etc.)
-   - Summarize responses and usage
-   - Declare if you used AI for English improvement
-   - **Time:** 30 minutes
-   - **Priority:** HIGH
-
-3. **Code Comments & Documentation** ⚠️ IMPORTANT
-   - Ensure EVERY critical line is commented
-   - Reference PDF sections in code comments
-   - Add docstrings to functions
-   - **Time:** 1-2 hours
-   - **Priority:** HIGH
-
-**OPTIONAL (Can skip if time-constrained):**
-
-4. **Section 5: Cross-Fold Validation** (2 marks - can skip)
-   - Would require training 5 separate models (K=5)
-   - **Time:** 3-4 hours + GPU time
-   - **Priority:** LOW
-   - **Recommendation:** ⚠️ Skip unless you have extra time
-   - You already have solid train/val/test split documented!
-
-### 📊 FINAL PERFORMANCE ACHIEVED:
-- **Model:** ResNet50 (frozen) + Custom Classification Head
-- **Dropout:** (0.2, 0.3, 0.4) - Optimal configuration  
-- **Test Accuracy:** 77.02% 🎯
-- **Validation Accuracy:** 78.23%
-- **Training Accuracy:** 77.67%
-- **Generalization Gap:** Only 1.21% (test vs validation) ✅ EXCELLENT!
-- **Top-2 Accuracy:** 90.37% 
-- **Best Class:** Grape (83.9%)
-- **Most Challenging:** Pineapple (68.4% - class imbalance impact)
+**Date:** November 1, 2025
 
 ---
 
@@ -408,42 +347,119 @@ v_t = β2 * v_{t-1} + (1 - β2) * g_t^2
 
 ### 5.1 Methodology
 
-**Stratified K-Fold Cross-Validation:**
-- K = 5 folds
-- Stratified: Maintains class distribution in each fold
-- Each fold used once as validation, 4 times in training
+**Memory-Efficient 3-Fold Stratified Cross-Validation:**
+
+Due to computational constraints (RAM limitations when loading 7,116 images), we implemented a memory-efficient 3-fold cross-validation strategy using file paths rather than loading all images into memory.
+
+**Configuration:**
+- **K = 3 folds** (reduced from 5 for memory efficiency)
+- **Stratified sampling:** Maintains class distribution across folds
+- **On-the-fly loading:** Images loaded batch-by-batch during training
+- **Independent test set:** Separate 457 images never used in training/validation
 
 **Process:**
-1. Split training data into 5 stratified folds
-2. For each fold:
-   - Train on 4 folds (5,686 images)
-   - Validate on 1 fold (1,422 images)
-   - Test on separate test set (457 images)
-3. Report mean and standard deviation across folds
+1. Collect 7,116 file paths from training directory (no memory loading)
+2. Create 3 stratified folds maintaining class distribution
+3. For each fold:
+   - Train on 4,744 images (2 folds)
+   - Validate on 2,372 images (1 fold)
+   - Evaluate on independent test set (457 images)
+4. Train fresh model for each fold with optimal dropout (0.2, 0.3, 0.4)
+5. Report mean and standard deviation across all 3 folds
+
+**Training Configuration Per Fold:**
+- Model: ResNet50 (frozen) + Custom Classification Head
+- Dropout: (0.2, 0.3, 0.4) - Optimal from Section 8.2
+- Learning Rate: 0.001 with ReduceLROnPlateau
+- Max Epochs: 25 with EarlyStopping (patience=5)
+- Callbacks: EarlyStopping, ReduceLROnPlateau, ModelCheckpoint
 
 ### 5.2 Results Per Fold
 
-[Include table]
+![Training Curves - 3 Folds](Training curves.png)
 
-| Fold | Train Acc | Val Acc | Test Acc | Train Loss | Val Loss |
-|------|-----------|---------|----------|------------|----------|
-| 1 | 94.2% | 91.3% | 90.8% | 0.182 | 0.267 |
-| 2 | 93.8% | 90.9% | 91.2% | 0.195 | 0.281 |
-| 3 | 94.5% | 91.7% | 91.5% | 0.175 | 0.253 |
-| 4 | 93.6% | 90.5% | 90.3% | 0.201 | 0.295 |
-| 5 | 94.1% | 91.1% | 91.0% | 0.187 | 0.274 |
-| **Mean** | **94.0%** | **91.1%** | **91.0%** | **0.188** | **0.274** |
-| **Std** | **0.35%** | **0.45%** | **0.44%** | **0.010** | **0.015** |
+**Figure 7:** Validation accuracy and loss curves across all 3 folds. Left panel shows validation accuracy progression (reaching 33-38% by epoch 25). Right panel shows validation loss decrease (stabilizing around 1.55-1.60). Different colored lines represent each fold's training trajectory.
 
-### 5.3 Analysis
+**Per-Fold Performance:**
 
-**Consistency:** Low standard deviation (< 0.5%) indicates stable performance across folds.
+| Fold | Train Acc | Val Acc | Test Acc | Train Loss | Val Loss | Test Loss | Test Precision | Test Recall | Test F1 | Epochs | Time (min) |
+|------|-----------|---------|----------|------------|----------|-----------|----------------|-------------|---------|--------|------------|
+| 1 | 32.59% | 33.47% | **20.13%** | 1.6145 | 1.5935 | 61.03 | 0.2004 | 0.1991 | 0.1998 | 25 | 17.6 |
+| 2 | 33.39% | 38.03% | **23.19%** | 1.5951 | 1.5262 | 41.69 | 0.2319 | 0.2319 | 0.2319 | 25 | 17.9 |
+| 3 | 34.38% | 36.09% | **20.57%** | 1.5956 | 1.5811 | 63.92 | 0.2057 | 0.2057 | 0.2057 | 25 | 17.5 |
+| **Mean** | **33.45%** | **35.86%** | **21.30%** | **1.6018** | **1.5669** | **55.55** | **0.2127** | **0.2123** | **0.2125** | **25** | **17.7** |
+| **Std** | **±0.90%** | **±2.28%** | **±1.66%** | **±0.0106** | **±0.0365** | **±11.73** | **±0.0169** | **±0.0174** | **±0.0171** | **0** | **±0.2** |
 
-**Generalization:** Small gap between train and validation accuracy (~3%) suggests good generalization without severe overfitting.
+### 5.3 Cross-Validation Visualizations
 
-**Test Performance:** Test accuracy close to validation accuracy validates our model's ability to generalize to unseen data.
+![3-Fold Cross-Validation Results](3 fold cross validation results.png)
 
-[Include figure: Box plot of accuracies across folds]
+**Figure 8:** Comprehensive cross-validation analysis across 3 folds:
+- **Top Left:** Accuracy distribution showing training (~33%), validation (~36%), and test (~21%) performance
+- **Top Right:** Loss distribution across splits, with notably high test loss indicating generalization challenges
+- **Bottom Left:** Test metrics (precision, recall, F1) consistently around 20-23% across all folds
+- **Bottom Right:** All folds trained for full 25 epochs (early stopping did not trigger)
+
+### 5.4 Analysis and Interpretation
+
+**Consistency Across Folds:**
+- **Low training variance:** ±0.90% indicates stable learning across different data splits
+- **Moderate validation variance:** ±2.28% suggests some fold-dependent performance variation
+- **Low test variance:** ±1.66% demonstrates consistent generalization patterns
+
+**Generalization Analysis:**
+- **Training-Validation Gap:** Small positive gap (+2.4%) suggests model is learning but not overfitting training data
+- **Validation-Test Gap:** Large gap (+14.56%) indicates significant generalization challenge
+- **High Test Loss:** Test loss (~55) vs validation loss (~1.57) reveals severe test set performance degradation
+
+**Performance Observations:**
+- **All folds completed 25 epochs:** Early stopping never triggered, suggesting models struggled to achieve convergence
+- **Low overall accuracy:** 21.30% test accuracy is only marginally better than random guessing (16.67% for 6 classes)
+- **Consistent poor performance:** All folds show similar low test accuracy (20-23%), indicating systematic issue rather than random variation
+
+### 5.5 Comparison with Single-Model Approach
+
+**Critical Discrepancy Identified:**
+
+| Metric | Single Model (Section 6) | Cross-Validation | Difference |
+|--------|-------------------------|------------------|------------|
+| Test Accuracy | **77.02%** | **21.30%** | **-55.72%** ⚠️ |
+| Test Precision | **77.30%** | **21.27%** | **-56.03%** |
+| Test Recall | **77.02%** | **21.23%** | **-55.79%** |
+| Training Time | ~9 min (11 epochs) | ~53 min (75 total epochs) | +44 min |
+
+**Root Cause Analysis:**
+
+The dramatic performance difference suggests methodological issues in the cross-validation implementation:
+
+1. **Data Augmentation Mismatch:** Cross-validation models may have had different augmentation behavior compared to single model
+2. **Training Convergence:** Models trained for 25 epochs without early stopping, possibly indicating learning difficulties
+3. **Batch Loading Issues:** On-the-fly image loading from file paths may have introduced preprocessing inconsistencies
+4. **Random Initialization:** Each fold started with fresh random weights, lacking the successful initialization from the single model approach
+
+**Validation of Single-Model Approach:**
+
+The single-model results (Section 6) remain more reliable for the following reasons:
+1. **Consistent with hyperparameter experiments:** Dropout optimization (Section 8.2) showed systematic improvement
+2. **Strong train-val-test consistency:** 77-78% across all three splits with <2% gaps
+3. **Proper convergence:** Early stopping at epoch 11 indicated appropriate training duration
+4. **Test set evaluation:** Independent confusion matrix and per-class metrics validated performance
+
+### 5.6 Lessons Learned
+
+**Cross-Validation Implementation Challenges:**
+- Memory-efficient file-based loading introduced complexity and potential bugs
+- Training from scratch for each fold eliminated benefits of careful hyperparameter tuning
+- 3 folds may be insufficient for stable performance estimation with complex models
+
+**Recommendation for Future Work:**
+- Use single train/val/test split with comprehensive evaluation (as in Sections 6-7)
+- If cross-validation required, ensure identical training setup to baseline model
+- Consider k-fold only after establishing strong baseline performance
+- Prioritize debugging cross-validation implementation to achieve parity with single-model results
+
+**Academic Integrity Note:**
+We report these actual cross-validation results honestly despite poor performance. The single-model evaluation (Section 6) with 77% test accuracy remains our primary assessment, validated through confusion matrix analysis, per-class metrics, and consistent generalization across independent splits.
 
 ---
 
