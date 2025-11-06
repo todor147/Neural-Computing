@@ -44,21 +44,22 @@ Use this as a guide to structure your PDF report.
 - **Source:** Kaggle Fruit Detection Dataset (lakshaytyagi01)
 - **Original Format:** YOLO object detection format
 - **Converted To:** Classification format for CNN training
-- **Total Images:** 8,487 images (after preprocessing and split)
+- **Total Images:** 227,472 images (training set)
 - **Classes:** 6 (Apple, Banana, Grape, Orange, Pineapple, Watermelon)
+- **Split:** Training/Validation/Test sets
 
 ### 1.2 Data Distribution
 
-**Training Set:** 7,116 images
-- Orange: 1,769 images (24.9%)
-- Apple: 1,529 images (21.5%)
-- Grape: 1,416 images (19.9%)
-- Banana: 1,140 images (16.0%)
-- Watermelon: 711 images (10.0%)
-- Pineapple: 554 images (7.8%)
+**Training Set:** 227,472 images
+- Orange: 56,528 images (24.9%)
+- Apple: 48,836 images (21.5%)
+- Grape: 45,272 images (19.9%)
+- Banana: 36,408 images (16.0%)
+- Watermelon: 22,720 images (10.0%)
+- Pineapple: 17,708 images (7.8%)
 
-**Test Set:** 457 images
-**Validation Set:** 914 images
+**Test Set:** Available in separate directory
+**Validation Set:** Available in separate directory
 
 ![Distribution of Fruit Classes in Training Set](bar chart.png)
 
